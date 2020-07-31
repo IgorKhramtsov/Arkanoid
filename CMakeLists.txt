@@ -11,6 +11,7 @@ set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(src/)
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/glew)
+add_subdirectory(lib/glm)
 
 add_executable(Arkanoid ${SOURCES})
 
@@ -19,4 +20,5 @@ add_executable(Arkanoid ${SOURCES})
 target_link_libraries(Arkanoid
     glfw
     libglew_static
+    glm
 )

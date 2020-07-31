@@ -23,11 +23,13 @@ make # your build command dependent on platform
 
  - [glfw](https://github.com/glfw/glfw)
  - [glew](https://github.com/nigels-com/glew)
+ - [glm](https://github.com/g-truc/glm)
 
  ## Progress
 
  1. [X] Project initialization (cmake)
  2. [X] Creating a window (glfw)
- 3. [ ] Drawing (glew)
+ 3. [X] Drawing (glew, glm)
  4. [ ] Input control
- 5. [ ] Game logic
+ 5. [ ] Collisions
+ 6. [ ] Game logic
