@@ -1,22 +1,13 @@
 #include "Shader.h"
 #include "utils.h"
-#include "FileWatcher.h"
 
 #include <GL/glew.h>
 
-Shader::Shader(const char* vert_file, const char* frag_file, bool hot) {
+Shader::Shader(const char* vert_file, const char* frag_file) {
     char* vert;
     char* frag;
-    if (hot) {
-      FileWatcher watcher_vert = FileWatcher(vert_file, 350);
-      watcher_vert.start([&vert_file, &vert]() -> void { readFile(vert_file, &vert); });
-
-      FileWatcher watcher_frag(frag_file, 350);
-      watcher_frag.start([&frag_file, &frag]() -> void { readFile(frag_file, &frag); });
-    } else {
-      readFile(vert_file, &vert);
-      readFile(frag_file, &frag);
-    }
+    readFile(vert_file, &vert);
+    readFile(frag_file, &frag);
     this->m_ProgramID = Shader::createShaderProgram(vert, frag);
 }
 

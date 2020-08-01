@@ -11,7 +11,7 @@ private:
 
 public:
 
-    Shader(const char*, const char*, bool = false);
+    Shader(const char*, const char*);
     ~Shader();
 
     void setUniform4f(const char* name, float v0, float v1, float v2, float v3) const;

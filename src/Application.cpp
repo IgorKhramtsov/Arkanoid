@@ -52,7 +52,7 @@ void Application::Run() {
     auto lastTime = glfwGetTime();
     double curTime;
     double deltaTime = 0.;
-    double updateRate = 1. / 50.;
+    double updateRate = 1. / 40.;
 
     while(!glfwWindowShouldClose(m_Window)) {
         m_Renderer.Clear();

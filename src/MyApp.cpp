@@ -1,4 +1,5 @@
 #include "MyApp.h"
+#include "utils.h"
 
 MyApp::MyApp(const char *title, int width, int height) : Application(title, width, height) {
     m_Renderer.setClearColor(0.1f, 0.1f, 0.1f, 1.f);
@@ -32,11 +33,37 @@ void MyApp::Start() {
     m_Ball.renderebale = m_Renderer.CreateRect(25, 25);
     m_Ball.setColor(0.7f, 0.3f, 0.3f, 1.f);
     m_Ball.setPosition(m_Platform.transform.pos.x + 120.f / 2.f - 25.f / 2.f, m_Platform.transform.pos.y + 30.f);
+
+    m_State = STATE_START;
 }
 
 void MyApp::onUpdate() {
-    if (isKeyPressed(GLFW_KEY_LEFT))
-        m_Platform.setPosition(m_Platform.transform.pos.x - 1.f, m_Platform.transform.pos.y);
+    // TODO: Movement should be rewrited
+    auto ballSpeed = m_Platform.transform.velocity.x;
+    if (isKeyPressed(GLFW_KEY_LEFT)) {
+        curAccelerationSpeed -= accelerationSpeed * (MAX(abs(curAccelerationSpeed), 0.25f) / topAccelerationSpeed);
+    } else if (isKeyPressed(GLFW_KEY_RIGHT)) {
+        curAccelerationSpeed += accelerationSpeed * (MAX(abs(curAccelerationSpeed), 0.25f) / topAccelerationSpeed);
+    } else {
+        curAccelerationSpeed -= MIN(friction / 2., abs(curAccelerationSpeed)) * sign(curAccelerationSpeed);
+        if (abs(ballSpeed) > 0)
+            ballSpeed += MIN(friction * (MAX(abs(ballSpeed), 0.25f) / topSpeed), abs(ballSpeed)) * -sign(ballSpeed);
+    }
+    ballSpeed += curAccelerationSpeed;
+    curAccelerationSpeed = MIN(abs(curAccelerationSpeed), topAccelerationSpeed) * sign(curAccelerationSpeed);
+    ballSpeed = MIN(abs(ballSpeed), topSpeed) * sign(ballSpeed);
+    
+    m_Platform.move(ballSpeed, 0.f);
+    m_Platform.transform.velocity.x = ballSpeed;
+
+    if (m_State == STATE_START) {
+        auto center = m_Platform.getCenter();
+        m_Ball.setPosition(center.x - (25.f / 2.f), center.y + 30.f);
+    } else {
+        m_Ball.move(m_Ball.transform.velocity.x, m_Ball.transform.velocity.y);
+    }
+
+    std::cout << "curAcc: " << curAccelerationSpeed << " curSpeed: " << ballSpeed << '\n';
 }
 
 void MyApp::onDraw() {
@@ -53,5 +80,9 @@ void MyApp::onDraw() {
 }
 
 void MyApp::onKeyCallback(int key, int action) {
-
+    if (m_State == STATE_START && key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        m_Ball.transform.velocity.x = m_Platform.transform.velocity.x;
+        m_Ball.transform.velocity.y = 6.f;
+        m_State = STATE_GAME;
+    }
 }

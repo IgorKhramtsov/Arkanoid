@@ -30,6 +30,6 @@ make # your build command dependent on platform
  1. [X] Project initialization (cmake)
  2. [X] Creating a window (glfw)
  3. [X] Drawing (glew, glm)
- 4. [ ] Input control
+ 4. [X] Input control
  5. [ ] Collisions
  6. [ ] Game logic

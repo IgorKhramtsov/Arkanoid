@@ -19,6 +19,15 @@ static bool GLErrorsPrint(const char* fname) {
   return true;
 }
 
+static int sign(float f) { 
+  if (f > 0.) return 1.f;
+  else if (f < 0.) return -1.f;
+  else return 0.f;
+}
+#define MAX(x, y) (x >= y ? x : y)
+#define MIN(x, y) (x <= y ? x : y)
+
+
 static void readFile(const char *filename, char** source) {
   std::cout << "Scanning file " << filename << '\n';
 

@@ -18,6 +18,11 @@ void GameObject::setPosition(float x, float y) {
     transform.pos[1] = y;
 }
 
+void GameObject::move(float x, float y) {
+    transform.pos[0] += x;
+    transform.pos[1] += y;
+}
+
 void GameObject::setScale(float x, float y) {
     transform.scale[0] = x;
     transform.scale[1] = y;
