@@ -11,6 +11,13 @@ Renderer::Renderer(float width, float height) {
     this->m_View = glm::mat4(1.0f);
 }
 
+void Renderer::setClearColor(float v0, float v1, float v2, float v3) { 
+        m_ClearColor.r = v0;
+        m_ClearColor.g = v1; 
+        m_ClearColor.b = v2; 
+        m_ClearColor.a = v3; 
+}
+
 Renderable Renderer::CreateRect(float w, float h) {
     const float vertices[] = {
         0.f, 0.f,
@@ -63,4 +70,9 @@ void Renderer::Draw(const GameObject &obj,const Shader &shader) {
     ASSERT(obj.renderebale.vao != 0);
     GLCALL(glBindVertexArray(obj.renderebale.vao));
     GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}
+
+void Renderer::Clear() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
 }
