@@ -8,6 +8,8 @@ Simple OpenGL Arkanoid game.
   - bottom side is endgame
   - bricks generates randomly on the start
 
+![Screenshot of program](assets/screenshot.jpg)
+
 ## Build
 
 ```
@@ -31,5 +33,10 @@ make # your build command dependent on platform
  2. [X] Creating a window (glfw)
  3. [X] Drawing (glew, glm)
  4. [X] Input control
- 5. [ ] Collisions
- 6. [ ] Game logic
+ 5. [X] Collisions
+ 6. [X] Game logic
+ 7. [X] Effects
+
+ ## Known Bugs
+
+ 1. Physics: Ball bounces incorrectly in some circumstances.

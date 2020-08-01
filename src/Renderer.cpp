@@ -65,10 +65,11 @@ void Renderer::Draw(const GameObject &obj,const Shader &shader) {
     model = glm::scale(model, obj.transform.scale);
     auto mvp = m_Proj * m_View * model;
     shader.setUniformMat4f("u_MVP", mvp);
+
     shader.setUniform4f("u_Color", obj.color.r, obj.color.g, obj.color.b, obj.color.a);
 
-    ASSERT(obj.renderebale.vao != 0);
-    GLCALL(glBindVertexArray(obj.renderebale.vao));
+    ASSERT(obj.getRenderable().vao != 0);
+    GLCALL(glBindVertexArray(obj.getRenderable().vao));
     GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 

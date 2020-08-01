@@ -7,7 +7,6 @@ list(APPEND SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Shader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GameObject.h
     ${CMAKE_CURRENT_SOURCE_DIR}/GameObject.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FileWatcher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Application.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Application.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MyApp.h

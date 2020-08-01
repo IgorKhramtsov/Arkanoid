@@ -8,9 +8,9 @@
 class Application {
 private:
     static Application *instance;
-    int m_Width, m_Height;
     GLFWwindow *m_Window;
     bool m_Initialized = false;
+    double m_UpdateRate = 1. / 30.;
     
     static void glfw_error_callback(int error, const char* desc);
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -18,6 +18,7 @@ private:
 
 protected:
     Renderer m_Renderer;
+    int m_Width, m_Height;
 
 public:
     Application(const char*, int, int);
@@ -34,7 +35,6 @@ public:
     virtual void onKeyCallback(int key, int action) = 0;
 
     Renderer *getRenderer() { return &m_Renderer; };
-    void getSize(int &width, int &height) { width = m_Width; height = m_Height; };
     bool isInitialized() { return m_Initialized; };
     bool isKeyPressed(int key);
 };

@@ -52,7 +52,6 @@ void Application::Run() {
     auto lastTime = glfwGetTime();
     double curTime;
     double deltaTime = 0.;
-    double updateRate = 1. / 40.;
 
     while(!glfwWindowShouldClose(m_Window)) {
         m_Renderer.Clear();
@@ -61,9 +60,14 @@ void Application::Run() {
         deltaTime += (curTime - lastTime);
         lastTime = curTime;
 
-        if(deltaTime >= updateRate) {
+        if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+            m_UpdateRate = 1;
+        else
+            m_UpdateRate = 1. / 30.;
+        if(deltaTime >= m_UpdateRate) {
+            
             onUpdate();
-            deltaTime -= updateRate;
+            deltaTime -= m_UpdateRate;
         }
 
         onDraw();

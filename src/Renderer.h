@@ -9,7 +9,8 @@ struct Transform {
     glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f);
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec2 velocity = glm::vec2(0.f, 0.f);
+    glm::vec3 velocity = glm::vec3(0.f, 0.f, 0.f);
+    glm::vec2 size;
 
     Transform() = default;
 };
