@@ -16,20 +16,19 @@ void MyApp::Start() {
     const float brick_w = ((m_Width - padding_x * 2) - (spacing * perLine)) / perLine;
     const float brick_h = 20.f;
     const int m_BricksNumber = perLine * lines;
-    const auto renderable = m_Renderer.CreateRect(brick_w, brick_h);
+    const auto renderable = m_Renderer.CreateRect(brick_w, brick_h, m_RoundShader);
     gameObjects.clear();
     gameObjects.reserve(m_BricksNumber + 2);
 
     std::shared_ptr<BrickGO> brick;
     for (int k = 0; k < lines; ++k) {
         for (int i = 0; i < perLine; ++i) {
-            brick = std::make_shared<BrickGO>();
-            brick->setRenderable(renderable)
-            ->setColor(0.3f, 0.3f, 0.7f, 1.f)
-            ->setPosition(
-                padding_x + (brick_w + spacing) * (i),
-                ((float)m_Height - padding_y) - ((brick_h + spacing) * (k))
-            );
+            brick = std::make_shared<BrickGO>(this, renderable);
+            (*brick.get()).setColor(0.3f, 0.3f, 0.7f, 1.f)
+                .setPosition(
+                    padding_x + (brick_w + spacing) * (i),
+                    ((float)m_Height - padding_y) - ((brick_h + spacing) * (k))
+                );
             gameObjects.push_back(std::move(brick));
         }
     }
@@ -38,50 +37,39 @@ void MyApp::Start() {
     for (int k = 0; k < lines; ++k) {
         for (int i = 0; i < perLine / 2; ++i) {
             if (std::rand() % 4 == 0) {
-                if (auto obj = dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + i).get())) {
+                if (auto obj = dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + i).get())) 
                     obj->Destroy();
-                } else {
-                    ASSERT(false);
-                }
-                if (auto obj = dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + (perLine - i - 1)).get())) {
+                if (auto obj = dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + (perLine - i - 1)).get()))
                     obj->Destroy();
-                } else {
-                    ASSERT(false);
-                }
-                // ASSERT(dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + i)) != nullptr);
-                // ASSERT(dynamic_cast<BrickGO*>(gameObjects.at((k * perLine) + (perLine - i - 1))));
-                // gameObjects.at((k * perLine) + i).Destroy();
-                // gameObjects.at((k * perLine) + (perLine - i - 1)).Destroy();
             }
         }
     }
-
-    m_Platform = std::make_shared<PlatformGO>();
-    m_Platform->setRenderable(m_Renderer.CreateRect(120, 20));
-    m_Platform->setColor(0.22f, 0.45f, 0.22f, 1.f);
-    m_Platform->setPosition(m_Width / 2.f - 120.f / 2.f    + 16.f, 20.f + 30.f);
+    m_Platform = std::make_shared<PlatformGO>(this, m_Renderer.CreateRect(120, 20, m_SimpleShader));
+    (*m_Platform.get()).setColor(0.22f, 0.45f, 0.22f, 1.f)
+        .setPosition(m_Width / 2.f - 120.f / 2.f + 16.f, 20.f + 30.f);
     gameObjects.push_back(m_Platform);
 
-    m_Ball = std::make_shared<BallGO>();
-    m_Ball->setRenderable(m_Renderer.CreateRect(25, 25));
-    m_Ball->setColor(0.9f, 0.35f, 0.35f, 1.f);
-    m_Ball->setPosition(m_Platform->transform.pos.x + 120.f / 2.f - 25.f / 2.f, m_Platform->transform.pos.y + 30.f);
+    m_Ball = std::make_shared<BallGO>(this, m_Renderer.CreateRect(25, 25, m_RoundShader));
+    (*m_Ball.get()).setColor(0.9f, 0.35f, 0.35f, 1.f)
+        .setPosition(m_Platform->transform.pos.x + 120.f / 2.f - 25.f / 2.f, m_Platform->transform.pos.y + 30.f);
     gameObjects.push_back(m_Ball);
-
+    
     m_State = State::START;
 }
 
 void MyApp::onUpdate() {
     for (auto obj : gameObjects) {
-        obj->OnUpdate(*this);
+        obj->OnUpdate();
     }
-
-    if (blinkingColor >= 0.9f || blinkingColor <= 0.6f) 
-        colorRate *= -1;
-    blinkingColor += colorRate;
 }
 
-glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius) {
+void MyApp::onDraw() {
+    for (auto &object : gameObjects) {
+        object->OnDraw();
+    }
+}
+
+glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius) const {
     glm::vec3 bVec(1.f, 1.f, 1.f); // bounce vector
     if ((ballPos.x + radius) > m_Width || (ballPos.x - radius) < 0)
         bVec.x = -1;
@@ -119,6 +107,7 @@ glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius) {
             }
     }
 
+    // Platform collision - move to bricks collision
     if (isInside(ballT, m_Platform->transform) || isInside(ballB, m_Platform->transform) ||
         isInside(ballL, m_Platform->transform) || isInside(ballR, m_Platform->transform) ) {
         if ( abs(ballPos.x - m_Platform->getCenter().x) / m_Platform->transform.size.x >
@@ -132,39 +121,15 @@ glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius) {
     return bVec;
 }
 
-bool MyApp::isInside(glm::vec3 point, Transform target) {
+bool MyApp::isInside(glm::vec3 point, Transform target) const {
     return (point.x >= target.pos.x && point.x <= target.pos.x + target.size.x) &&
             (point.y >= target.pos.y && point.y <= target.pos.y + target.size.y);
 }
 
-void MyApp::onDraw() {
-    BrickGO *brick;
-    for (auto &object : gameObjects) {
-        if (brick = dynamic_cast<BrickGO*>(object.get())){
-            if(brick->isDead()) {
-                if (brick->getDestroyEffRadius() > 0) {
-                    m_Renderer.UseShader(m_BallShader);
-                    m_BallShader.setUniformVec2f("u_Center", brick->getCenter());
-                    m_BallShader.setUniform1f("u_Radius", brick->getDestroyEffRadius());
-                    brick->setColor(brick->color.r + 0.1f, brick->color.g, brick->color.b, brick->color.a);
-                    m_Renderer.Draw(*brick, m_BallShader);
-                }
-            } else {
-                object->setColor(object->color.r, object->color.g, blinkingColor, object->color.a);
-                m_Renderer.Draw(*object, m_SimpleShader);
-            }
-        }
-    }
-
-    m_Renderer.Draw(*m_Platform, m_SimpleShader);
-
-    m_Renderer.UseShader(m_BallShader);
-    m_BallShader.setUniformVec2f("u_Center", m_Ball->getCenter());
-    m_BallShader.setUniform1f("u_Radius", m_Ball->transform.size.y / 2.);
-    m_Renderer.Draw(*m_Ball, m_BallShader);
-}
-
-void MyApp::onKeyCallback(int key, int action) {
+void MyApp::onKeyCallback(int key, int action) 
+{
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        CloseWindow();
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         if (m_State == State::START) {
             m_Ball->transform.velocity.x = MIN(10.f, abs(m_Platform->transform.velocity.x)) * sign(m_Platform->transform.velocity.x);

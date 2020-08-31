@@ -2,21 +2,19 @@
   Arkanoid
   - platform moving left\right by keyboard
   - ball bounces out of sides, platform and top
-  - bottom side is endgame
-  - bricks generates randomly on the start
+  - bottom is endgame
+  - bricks generates randomly on game start
 */
 
-/* TODO:
-  - Refactor
-    - Casts
-    - Smart pointers
-    - More abstraction
+/* Should be done:
   - Review physic
   - Add lerp
   - Review movement
   - Add mouse control
   - Add BatchRendering
   - Rework rendering (move more to vertexes)
+  - ECS??
+  - Cache shader`s uniforms locations
 */
 
 #include "MyApp.h"

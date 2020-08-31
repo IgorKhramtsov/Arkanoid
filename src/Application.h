@@ -10,10 +10,10 @@ private:
     const static inline double FixedUpdateRate = 1. / 30.;
     const static inline double SlowedFixedUpdateRate = 1.;
           static inline Application *instance;
+          static inline GLFWwindow *m_Window;
 
-    static inline GLFWwindow *m_Window;
     bool m_Initialized = false;
-    double m_UpdateRate = 1. / 30.;
+    double m_UpdateRate = FixedUpdateRate;
     
     static void glfw_error_callback(int error, const char* desc);
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -29,13 +29,14 @@ public:
     static Application& getApp();
 
     Renderer& getRenderer();
-    bool isInitialized();
     void getWindowSize(int&, int&);
+    bool isInitialized();
     static bool isKeyPressed(int key);
 
     void Run();
+    void CloseWindow();
 
+    virtual void onKeyCallback(int key, int action) = 0;
     virtual void onUpdate() = 0;
     virtual void onDraw() = 0;
-    virtual void onKeyCallback(int key, int action) = 0;
 };

@@ -6,6 +6,8 @@
 class BallGO : public GameObject {
 
 public:
-    void OnUpdate(MyApp &);
+    BallGO(MyApp *app, Renderable r) : GameObject(app, r) {};
 
+    void OnUpdate();
+    void OnDraw();
 };

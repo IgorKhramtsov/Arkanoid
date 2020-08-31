@@ -18,6 +18,7 @@ struct Renderable {
     unsigned int vao;
     float width;
     float height;
+    const Shader *shader;
 };
 
 class Renderer {
@@ -33,11 +34,13 @@ public:
     Renderer() = default;
     Renderer(float width, float height);
     ~Renderer() = default;
-    Renderable CreateRect(float w, float h);
+    Renderable CreateRect(float w, float h, const Shader &s);
 
     void setClearColor(float v0, float v1, float v2, float v3);
     void Clear();
 
     void UseShader(const Shader&);
+    void UseShader(const Shader *);
     void Draw(const GameObject&, const Shader&);
+    void Draw(const GameObject *,const Shader *);
 };

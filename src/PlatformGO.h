@@ -13,8 +13,9 @@ class PlatformGO : public GameObject {
     const float accelerationSpeed = 0.7f;
     float curAccelerationSpeed = .0f;
 
-    void OnUpdate(MyApp &);
-    
+    void OnUpdate();
+    void OnDraw();
+
 public:
-    PlatformGO();
+    PlatformGO(MyApp *app, Renderable r);
 };

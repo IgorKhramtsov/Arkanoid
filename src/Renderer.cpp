@@ -18,7 +18,7 @@ void Renderer::setClearColor(float v0, float v1, float v2, float v3) {
         m_ClearColor.a = v3; 
 }
 
-Renderable Renderer::CreateRect(float w, float h) {
+Renderable Renderer::CreateRect(float w, float h, const Shader& shader) {
     const float vertices[] = {
         0.f, 0.f,
         w, 0.f,
@@ -49,7 +49,11 @@ Renderable Renderer::CreateRect(float w, float h) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), (const void*)indices, GL_STATIC_DRAW);
 
-    return { vao, w, h};
+    return { vao, w, h, &shader };
+}
+
+void Renderer::UseShader(const Shader *shader) {
+    UseShader(*shader);
 }
 
 void Renderer::UseShader(const Shader &shader) {
@@ -59,7 +63,11 @@ void Renderer::UseShader(const Shader &shader) {
     shader.Bind();
 }
 
-void Renderer::Draw(const GameObject &obj,const Shader &shader) {
+void Renderer::Draw(const GameObject *obj, const Shader *shader) {
+    Draw(*obj, *shader);
+}
+
+void Renderer::Draw(const GameObject &obj, const Shader &shader) {
     UseShader(shader);
     auto model = glm::translate(glm::mat4(1.0f), obj.transform.pos);
     auto mvp = m_Proj * m_View * model;

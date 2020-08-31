@@ -63,14 +63,19 @@ void Application::Run() {
             onUpdate();
             deltaTime -= m_UpdateRate;
         }
-
+        
         onDraw();
 
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
-  }
-
+    }
 }
+
+void Application::CloseWindow() 
+{
+    glfwSetWindowShouldClose(m_Window, GLFW_TRUE);
+}
+
 Application& Application::getApp() {
     return *Application::instance;
 }
@@ -93,9 +98,6 @@ bool Application::isKeyPressed(int key) {
 }
 
 void Application::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    
     Application::getApp().onKeyCallback(key, action);
 }
 

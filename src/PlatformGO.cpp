@@ -1,11 +1,11 @@
 #include "PlatformGO.h"
 #include "utils.h"
 
-PlatformGO::PlatformGO() {
+PlatformGO::PlatformGO(MyApp *app, Renderable r) : GameObject(app, r) {
     Application::getApp().getWindowSize(m_WindowWidth, m_WindowHeight);
 }
 
-void PlatformGO::OnUpdate(MyApp &app) {
+void PlatformGO::OnUpdate() {
     // Platform movement
     auto pltSpeed = transform.velocity.x;
     if (Application::isKeyPressed(GLFW_KEY_LEFT) || Application::isKeyPressed(GLFW_KEY_RIGHT)) {
@@ -32,4 +32,9 @@ void PlatformGO::OnUpdate(MyApp &app) {
         transform.velocity.x = 0;
         curAccelerationSpeed = 0;
     }
+}
+
+void PlatformGO::OnDraw() 
+{
+    renderer->Draw(this, getRenderable().shader);
 }
