@@ -62,7 +62,6 @@ void Renderer::UseShader(const Shader &shader) {
 void Renderer::Draw(const GameObject &obj,const Shader &shader) {
     UseShader(shader);
     auto model = glm::translate(glm::mat4(1.0f), obj.transform.pos);
-    model = glm::scale(model, obj.transform.scale);
     auto mvp = m_Proj * m_View * model;
     shader.setUniformMat4f("u_MVP", mvp);
 

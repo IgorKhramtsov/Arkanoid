@@ -12,8 +12,10 @@ Simple OpenGL Arkanoid game.
 
 ## Build
 
+> Requires C++17
+
 ```
-git clone --recursive https://github.com/crataegus27/Arkanoid.git
+git clone --recursive https://github.com/IgorKhramtsov/Arkanoid.git
 cd Arkanoid
 mkdir build
 cd build 

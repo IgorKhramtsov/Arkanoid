@@ -6,6 +6,19 @@
   - bricks generates randomly on the start
 */
 
+/* TODO:
+  - Refactor
+    - Casts
+    - Smart pointers
+    - More abstraction
+  - Review physic
+  - Add lerp
+  - Review movement
+  - Add mouse control
+  - Add BatchRendering
+  - Rework rendering (move more to vertexes)
+*/
+
 #include "MyApp.h"
 
 int main(int argc, char** argv) {

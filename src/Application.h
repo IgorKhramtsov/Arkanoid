@@ -7,8 +7,11 @@
 
 class Application {
 private:
-    static Application *instance;
-    GLFWwindow *m_Window;
+    const static inline double FixedUpdateRate = 1. / 30.;
+    const static inline double SlowedFixedUpdateRate = 1.;
+          static inline Application *instance;
+
+    static inline GLFWwindow *m_Window;
     bool m_Initialized = false;
     double m_UpdateRate = 1. / 30.;
     
@@ -23,18 +26,16 @@ protected:
 public:
     Application(const char*, int, int);
     ~Application();
+    static Application& getApp();
 
-    static Application *getApp() {
-        return Application::instance; 
-    };
+    Renderer& getRenderer();
+    bool isInitialized();
+    void getWindowSize(int&, int&);
+    static bool isKeyPressed(int key);
 
     void Run();
 
     virtual void onUpdate() = 0;
     virtual void onDraw() = 0;
     virtual void onKeyCallback(int key, int action) = 0;
-
-    Renderer *getRenderer() { return &m_Renderer; };
-    bool isInitialized() { return m_Initialized; };
-    bool isKeyPressed(int key);
 };

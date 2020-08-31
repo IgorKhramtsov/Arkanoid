@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <iostream>
 
-Application *Application::instance;
 Application::Application(const char *title, int width, int height) {
     if (Application::instance == nullptr)
         Application::instance = this;
@@ -48,7 +47,6 @@ Application::~Application() {
 }
 
 void Application::Run() {
-    
     auto lastTime = glfwGetTime();
     double curTime;
     double deltaTime = 0.;
@@ -60,12 +58,8 @@ void Application::Run() {
         deltaTime += (curTime - lastTime);
         lastTime = curTime;
 
-        if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-            m_UpdateRate = 1;
-        else
-            m_UpdateRate = 1. / 30.;
+        m_UpdateRate = isKeyPressed(GLFW_KEY_LEFT_SHIFT) ? SlowedFixedUpdateRate : FixedUpdateRate;
         if(deltaTime >= m_UpdateRate) {
-            
             onUpdate();
             deltaTime -= m_UpdateRate;
         }
@@ -74,19 +68,35 @@ void Application::Run() {
 
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
-        
   }
+
+}
+Application& Application::getApp() {
+    return *Application::instance;
+}
+
+Renderer& Application::getRenderer() {
+    return m_Renderer; 
+}
+
+bool Application::isInitialized() {
+    return m_Initialized; 
+}
+
+void Application::getWindowSize(int &w, int &h) {
+    w = m_Width;
+    h = m_Height;
 }
 
 bool Application::isKeyPressed(int key) {
-    return glfwGetKey(m_Window, key) == GLFW_PRESS;
+    return glfwGetKey(Application::m_Window, key) == GLFW_PRESS;
 }
 
 void Application::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     
-    Application::getApp()->onKeyCallback(key, action);
+    Application::getApp().onKeyCallback(key, action);
 }
 
 void Application::glfw_error_callback(int error, const char* desc) {

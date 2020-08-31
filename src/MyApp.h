@@ -2,16 +2,23 @@
 
 #include "Application.h"
 #include "GameObject.h"
+#include <vector>
+#include <memory>
 
-#define STATE_START 0
-#define STATE_GAME  1
+class PlatformGO;
+class BallGO;
+class BrickGO;
+
+enum class State {
+  START,
+  GAME
+};
 
 class MyApp : public Application {
 private:
-    int m_BricksNumber;
-    GameObject *m_Bricks = new GameObject[30];
-    GameObject m_Platform;
-    GameObject m_Ball;
+    std::vector<std::shared_ptr<GameObject>> gameObjects;
+    std::shared_ptr<PlatformGO> m_Platform;
+    std::shared_ptr<BallGO> m_Ball;
     Shader m_SimpleShader = Shader("assets/brick.vert", "assets/brick.frag");
     Shader m_BallShader = Shader("assets/brick.vert", "assets/ball.frag");
 
@@ -19,18 +26,11 @@ private:
     const int padding_y = 200;
     const int spacing = 10;
 
-    int m_State = STATE_START;
+    State m_State = State::START;
 
-    const float topSpeed = 17.f;
-    const float friction = 3.4f;
-    const float topAccelerationSpeed = 3.5f;
-    const float accelerationSpeed = 0.7f;
-    float curAccelerationSpeed = .0f;
+    static inline float MyApp::colorRate = 0.005f;
+    static inline float MyApp::blinkingColor = 0.8f;
 
-    static float MyApp::colorRate;
-    static float MyApp::blinkingColor;
-
-    glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius);
     bool isInside(glm::vec3 point, Transform target);
 public:
   MyApp(const char *title, int width, int height);
@@ -39,4 +39,9 @@ public:
   void onUpdate();
   void onDraw();
   void onKeyCallback(int key, int action);
+  glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius);
+
+
+  State getState() const;
+  const std::shared_ptr<PlatformGO> getPlatform() const;
 };
