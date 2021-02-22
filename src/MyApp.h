@@ -36,7 +36,7 @@ public:
   void Start();
   void onUpdate();
   void onDraw();
-  glm::vec3 MyApp::bounceVector(const glm::vec3 ballPos, const float radius) const;
+  glm::vec3 bounceVector(const glm::vec3 ballPos, const float radius) const;
 
 
   State getState() const;
