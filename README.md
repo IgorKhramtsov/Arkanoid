@@ -26,7 +26,7 @@ make # your build command dependent on platform
 ## Dependencies
 
  - [glfw](https://github.com/glfw/glfw)
- - [glew](https://github.com/nigels-com/glew)
+ - [glew](https://github.com/Perlmint/glew-cmake)
  - [glm](https://github.com/g-truc/glm)
 
  ## Progress
