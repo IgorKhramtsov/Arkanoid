@@ -3,10 +3,17 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef _MSC_VER
+#define DEBUG_BREAK __debugbreak()
+#else
+#include <signal.h>
+#define DEBUG_BREAK raise(SIGTRAP)
+#endif
+
 static void GLErrorsClear() { while(glGetError() != GL_NO_ERROR); }
 static bool GLErrorsPrint(const char* fname);
 
-#define ASSERT(x) if(!(x)) __debugbreak();
+#define ASSERT(x) if(!(x)) DEBUG_BREAK;
 #define GLCALL(x) GLErrorsClear();\
   x;\
   ASSERT(GLErrorsPrint(#x))
